@@ -5,7 +5,7 @@ import os
 
 from app.core.config import settings
 from app.core.security import verify_jwt_token
-from app.api.v1.api import api_router
+from app.api.v1 import api_router
 
 
 @asynccontextmanager
