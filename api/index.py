@@ -1,10 +1,14 @@
+import sys
+import os
+
+# Add parent directory to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-import os
 
 from app.core.config import settings
-from app.core.security import verify_jwt_token
 from app.api.v1 import api_router
 
 
