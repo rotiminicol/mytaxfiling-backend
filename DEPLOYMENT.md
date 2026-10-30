@@ -43,20 +43,34 @@ RESEND_API_KEY=re_ggUEib7c_K986YSxp4iwoqrEktG9zNWCZ
 
 ### Deployment Steps
 
-1. **Connect to Vercel** (if not already connected)
+1. **Install Vercel CLI** (if not installed)
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Connect to Vercel** (if not already connected)
    ```bash
    vercel login
    ```
 
-2. **Deploy**
+3. **Deploy**
    ```bash
    vercel
    ```
 
-3. **Set Environment Variables**
+4. **Set Environment Variables**
    - Go to Vercel Dashboard > your project > Settings > Environment Variables
    - Add all the variables listed above
+   - Select "Production" environment
+   - Click "Save"
    - Redeploy after adding variables
+
+### Important: After Adding Environment Variables
+
+After adding environment variables, you must **Redeploy**:
+- Go to Vercel Dashboard > your project > Deployments
+- Click the three dots on the latest deployment
+- Select "Redeploy"
 
 ### API Endpoints
 
