@@ -41,6 +41,8 @@ except Exception as e:
 
 
 @app.get("/")
+@app.get("/api")
+@app.get("/api/index")
 async def root():
     if startup_error:
         return JSONResponse(
@@ -55,6 +57,8 @@ async def root():
 
 
 @app.get("/health")
+@app.get("/api/health")
+@app.get("/api/index/health")
 async def health_check():
     if startup_error:
         return JSONResponse(
