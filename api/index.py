@@ -4,7 +4,7 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
@@ -14,10 +14,8 @@ from app.api.v1 import api_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
     print("Starting MyTaxFiling Backend API...")
     yield
-    # Shutdown
     print("Shutting down MyTaxFiling Backend API...")
 
 
@@ -54,10 +52,12 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {
+        "status": "healthy",
+        "supabase_configured": bool(settings.SUPABASE_URL),
+    }
 
 
-# Vercel serverless handler
-from mangum import Mangum
-
-handler = Mangum(app)
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return Response(status_code=204)

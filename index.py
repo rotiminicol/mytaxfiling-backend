@@ -4,7 +4,7 @@ import os
 # Add the current directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
@@ -53,10 +53,12 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {
+        "status": "healthy",
+        "supabase_configured": bool(settings.SUPABASE_URL),
+    }
 
 
-# Vercel serverless handler
-from mangum import Mangum
-
-handler = Mangum(app)
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return Response(status_code=204)
