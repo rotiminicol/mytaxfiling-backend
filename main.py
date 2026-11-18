@@ -30,6 +30,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.FRONTEND_URLS,
+    allow_origin_regex=r"https://.*\.manus\.computer",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

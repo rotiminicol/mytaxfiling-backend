@@ -19,6 +19,12 @@ class Settings(BaseSettings):
     # JWT Configuration
     JWT_SECRET: str = "default-jwt-secret-change-in-production"
     JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_MINUTES: int = 60
+    REFRESH_TOKEN_DAYS: int = 30
+    OTP_EXPIRE_MINUTES: int = 15
+    OTP_RESEND_COOLDOWN_SECONDS: int = 30
+    OTP_MAX_ATTEMPTS: int = 5
+    PASSWORD_RESET_URL: str = "http://localhost:5173/customer-dashboard/reset-password"
 
     # Email Configuration (Resend)
     RESEND_API_KEY: Optional[str] = ""

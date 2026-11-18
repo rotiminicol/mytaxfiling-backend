@@ -130,6 +130,43 @@ class EmailService:
         )
 
     @staticmethod
+    async def send_password_reset_otp_email(
+        to: str,
+        otp: str,
+        from_email: str = "MyTaxFiling <noreply@mytaxfiling.com.ng>",
+    ):
+        html_content = f"""
+        <html><body style="font-family:Arial,sans-serif;color:#333;line-height:1.6">
+          <div style="max-width:600px;margin:auto;padding:24px">
+            <div style="background:#18623f;color:#fff;padding:20px;text-align:center;border-radius:8px 8px 0 0"><h1>MyTaxFiling</h1></div>
+            <div style="background:#f9f9f9;padding:30px;border-radius:0 0 8px 8px">
+              <h2>Password reset code</h2><p>Use this one-time code to create a new password:</p>
+              <div style="font-size:32px;font-weight:bold;letter-spacing:8px;color:#18623f;text-align:center;padding:20px;background:#e8f5e9;border-radius:8px;margin:20px 0">{otp}</div>
+              <p>This code expires in {settings.OTP_EXPIRE_MINUTES} minutes. If you did not request it, you can ignore this email.</p>
+            </div>
+          </div>
+        </body></html>
+        """
+        return await EmailService.send_email(to=to, subject="Your Password Reset Code - MyTaxFiling", html_content=html_content, from_email=from_email)
+
+    @staticmethod
+    async def send_password_changed_email(
+        to: str,
+        from_email: str = "MyTaxFiling <noreply@mytaxfiling.com.ng>",
+    ):
+        html_content = """
+        <html><body style="font-family:Arial,sans-serif;color:#333;line-height:1.6">
+          <div style="max-width:600px;margin:auto;padding:24px">
+            <div style="background:#18623f;color:#fff;padding:20px;text-align:center;border-radius:8px 8px 0 0"><h1>MyTaxFiling</h1></div>
+            <div style="background:#f9f9f9;padding:30px;border-radius:0 0 8px 8px"><h2>Password changed</h2>
+              <p>Your MyTaxFiling password was changed successfully. If you did not make this change, contact support immediately.</p>
+            </div>
+          </div>
+        </body></html>
+        """
+        return await EmailService.send_email(to=to, subject="Your MyTaxFiling Password Was Changed", html_content=html_content, from_email=from_email)
+
+    @staticmethod
     async def send_welcome_email(
         to: str,
         name: str,

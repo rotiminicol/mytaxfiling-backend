@@ -9,7 +9,7 @@ security = HTTPBearer()
 
 def verify_jwt_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> Dict[str, Any]:
     """
-    Verify JWT token from Supabase and return decoded payload.
+    Verify a JWT issued by the MyTaxFiling Python backend.
     """
     token = credentials.credentials
     
@@ -20,6 +20,8 @@ def verify_jwt_token(credentials: HTTPAuthorizationCredentials = Depends(securit
             algorithms=[settings.JWT_ALGORITHM],
             options={"verify_aud": False}
         )
+        if payload.get("type") != "access":
+            raise JWTError("Invalid token type")
         return payload
     except JWTError as e:
         raise HTTPException(
