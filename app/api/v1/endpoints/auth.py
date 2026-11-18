@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import logging
 from typing import Any
 from uuid import uuid4
 
@@ -34,6 +35,7 @@ from app.models.auth import (
 from app.services.email_service import email_service
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 def _db():
@@ -99,10 +101,17 @@ async def _send_otp(email: str, purpose: str, full_name: str | None = None) -> i
         "last_sent_at": now.isoformat(),
     }).execute()
 
-    if purpose == "signup_verification":
-        await email_service.send_otp_email(to=email, otp=code)
-    else:
-        await email_service.send_password_reset_otp_email(to=email, otp=code)
+    try:
+        if purpose == "signup_verification":
+            await email_service.send_otp_email(to=email, otp=code)
+        else:
+            await email_service.send_password_reset_otp_email(to=email, otp=code)
+    except Exception:
+        logger.exception("OTP email delivery failed for purpose=%s", purpose)
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Verification email could not be sent. Check the Resend API key and verified sender domain.",
+        )
     return settings.OTP_RESEND_COOLDOWN_SECONDS
 
 

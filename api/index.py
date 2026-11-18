@@ -1,17 +1,19 @@
 import sys
 import os
 import traceback
+import logging
 
 # Add parent directory to path
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 startup_error = None
+logger = logging.getLogger(__name__)
 app = FastAPI(
     title="MyTaxFiling API",
     description="Backend API for MyTaxFiling",
@@ -39,6 +41,15 @@ try:
 except Exception as e:
     startup_error = traceback.format_exc()
     print("STARTUP ERROR:", startup_error)
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    logger.exception("Unhandled backend error on %s %s", request.method, request.url.path)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "The backend could not complete the request. Check the Vercel function logs."},
+    )
 
 
 @app.get("/")
