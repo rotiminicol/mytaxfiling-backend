@@ -56,7 +56,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
         }
     return JSONResponse(
         status_code=500,
-        content={"detail": f"Backend diagnostic: {type(exc).__name__}: {exc}"},
+        content={"detail": "The backend could not complete the request. Check the Supabase and Resend configuration."},
         headers=headers,
     )
 
