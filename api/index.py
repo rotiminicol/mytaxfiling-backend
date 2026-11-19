@@ -46,9 +46,18 @@ except Exception as e:
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception):
     logger.exception("Unhandled backend error on %s %s", request.method, request.url.path)
+    origin = request.headers.get("origin", "")
+    headers = {}
+    if origin.endswith(".manus.computer"):
+        headers = {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+            "Vary": "Origin",
+        }
     return JSONResponse(
         status_code=500,
-        content={"detail": "The backend could not complete the request. Check the Vercel function logs."},
+        content={"detail": f"Backend diagnostic: {type(exc).__name__}: {exc}"},
+        headers=headers,
     )
 
 
